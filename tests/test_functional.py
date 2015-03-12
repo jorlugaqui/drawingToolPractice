@@ -14,6 +14,7 @@ import mock
 import random
 
 # App Imports
+
 from app import get_menu
 
 
@@ -34,6 +35,25 @@ class TestApp(unittest2.TestCase):
         option = get_option(1, 2, 3, key='value')
         self.assertIn(option, [1, 2, 3])
 
+    def test_get_create_canvas_command(self):
+        get_option = mock.MagicMock(return_value='C 3 4')
+        option = get_option('C 3 4', key='value')
+        self.assertIn(option, 'C 3 4')
+
+    def test_create_canvas(self):
+        base_canvas = [
+            ['-', '-', '-', '-', '-'],
+            [' ', '|', ' ', '|', ' '],
+            [' ', '|', ' ', '|', ' '],
+            [' ', '|', ' ', '|', ' '],
+            [' ', '|', ' ', '|', ' '],
+            ['-', '-', '-', '-', '-']
+        ]
+        get_canvas = mock.MagicMock(return_value=base_canvas)
+        ilu = mock.Mock()
+        printed = get_canvas(ilu, 'C 3 4')
+        self.assertEqual(len(printed[0]), len(base_canvas[0]))
+        self.assertEqual(sorted(base_canvas), sorted(printed))
 
 if __name__ == '__main__':
     unittest2.main()
