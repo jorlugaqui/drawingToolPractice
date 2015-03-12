@@ -31,9 +31,11 @@ class TestApp(unittest2.TestCase):
         self.assertIn('Main Menu', res)
 
     def test_choose_correct_option(self):
-        get_option = mock.MagicMock(return_value=random.randint(1, 3))
-        option = get_option(1, 2, 3, key='value')
-        self.assertIn(option, [1, 2, 3])
+        base = ('C', 'L', 'R', 'B', 'Q')
+        selected = base[random.randint(0, len(base)-1)]
+        get_option = mock.MagicMock(return_value=selected)
+        option = get_option('C', 'L', 'R', 'B', 'Q', key='value')
+        self.assertIn(option, base)
 
     def test_get_create_canvas_command(self):
         get_option = mock.MagicMock(return_value='C 3 4')
@@ -50,10 +52,8 @@ class TestApp(unittest2.TestCase):
             ['-', '-', '-', '-', '-']
         ]
         get_canvas = mock.MagicMock(return_value=base_canvas)
-        ilu = mock.Mock()
-        printed = get_canvas(ilu, 'C 3 4')
-        self.assertEqual(len(printed[0]), len(base_canvas[0]))
-        self.assertEqual(sorted(base_canvas), sorted(printed))
+        printed = get_canvas('C 3 4')
+        self.assertListEqual(printed, base_canvas)
 
 if __name__ == '__main__':
     unittest2.main()

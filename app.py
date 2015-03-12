@@ -6,8 +6,13 @@ from models.illustrator import Illustrator
 
 
 def get_menu():
-    text = "***Main Menu***\n1.Create a new canvas.\n2.Start Drawing.\n3.Quit"
-    text += "\nEnter your choice (1, 2, 3): "
+    text = """***Main Menu***
+    Create a new canvas (C).
+    Create a new Line (L).
+    Create a new Rectangle (R).
+    Fill Area (B).
+    Quit (Q).
+    Enter your choice (C, L, R, B, Q): """
     return text
 
 
@@ -17,7 +22,7 @@ def get_option(option='menu'):
         txt = get_menu()
     elif option == 'command':
         txt = 'Enter command: '
-    return input(txt)
+    return raw_input(txt)
 
 
 def get_canvas(illustrator, command):
@@ -27,12 +32,18 @@ def get_canvas(illustrator, command):
 def main():
     illustrator = Illustrator()
     option = -1
-    while not option == 3:
+    while not option == 'Q':
         option = get_option()
-        if option == 1:
+        if option == 'C':
             command = get_option(option='command')
             print get_canvas(illustrator, command)
-        if option == 2:
+        elif option == 'L':
+            pass
+        elif option == 'R':
+            pass
+        elif option == 'B':
+            pass
+        else:
             pass
 
 if __name__ == '__main__':
