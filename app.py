@@ -31,8 +31,8 @@ def get_canvas(illustrator, command):
 
 def main():
     illustrator = Illustrator()
-    option = -1
-    while not option == 'Q':
+    option = ''
+    while not option.upper() == 'Q':
         option = get_option()
         if option.upper() in ('C', 'L', 'R', 'B'):
             command = get_option(option='command')

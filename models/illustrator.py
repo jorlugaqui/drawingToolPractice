@@ -19,7 +19,7 @@ class Canvas():
     def create_canvas(self):
         """ Create a new canvas with the w and h given"""
 
-        horizontal, vertical = self.w + 2, self.h
+        horizontal, vertical = self.w + 4, self.h
         self.canvas.append(self.__get_horizontal_lines(horizontal))
         for i in range(0, vertical):
             self.canvas.append(self.__get_vertical_lines(horizontal))
@@ -81,27 +81,21 @@ class Canvas():
                 points[len(points)-1][1]):
             return False
 
-        rows = len(self.canvas)
-        columns = len(self.canvas[0])
-        for column in range(0, columns):
-            for row in range(0, rows):
-                if (column, row) in points:
-                    self.canvas[row][column] = 'x'
-        return True
+        return self.draw(points)
 
     def __line_in_boundaries(self, x1, y1, x2, y2):
         boundaries = self.__get_canvas_boundaries()
 
-        if x1 <= boundaries[0][1] or x1 >= boundaries[1][1]:
+        if x1 <= boundaries[0][0] or x1 >= boundaries[1][0]:
             return False
 
-        if y1 <= boundaries[0][0] or y1 >= boundaries[2][0]:
+        if y1 <= boundaries[0][1] or y1 >= boundaries[2][1]:
             return False
 
-        if x2 >= boundaries[1][1] or x2 <= boundaries[0][1]:
+        if x2 >= boundaries[1][0] or x2 <= boundaries[0][0]:
             return False
 
-        if y2 >= boundaries[2][0] or y2 <= boundaries[0][0]:
+        if y2 >= boundaries[2][1] or y2 <= boundaries[0][1]:
             return False
 
         return True
@@ -113,11 +107,54 @@ class Canvas():
         """
         boundaries = list()
         boundaries.append((1, 0))
-        boundaries.append((1, len(self.canvas[0])-2))
-        boundaries.append((len(self.canvas)-1, 1))
-        boundaries.append((len(self.canvas)-1, len(self.canvas[0])-2))
+        boundaries.append((len(self.canvas[0])-1, 0))
+        boundaries.append((1, len(self.canvas)-1))
+        boundaries.append((len(self.canvas[0])-1, len(self.canvas)-1))
         return boundaries
 
+    def draw_rectangle(self, x1, y1, x2, y2):
+        """
+        Fill with 'x' all points calculated for a rectangle
+        :param x1: First coordinate in x axis
+        :param y1: First coordinate in y axis
+        :param x2: Second coordinate in x axis
+        :param y2: Second coordinate in y axis
+        """
+
+        if len(self.canvas) == 0:
+            return False
+
+        if x1 >= x2 or y1 >= y2:
+            return False
+
+        points = self.__calculate_rectangle_points(x1, y1, x2, y2)
+
+        if not self.__line_in_boundaries(
+                x1+1,
+                y1,
+                x2+1,
+                y2):
+            return False
+
+        return self.draw(points)
+
+    def draw(self, points):
+        """
+        Fill points with 'x' character
+        :param points: The set of coordinates
+        :return: True if the process was ok, False in another case
+        """
+        try:
+            rows = len(self.canvas)
+            columns = len(self.canvas[0])
+            for column in range(0, columns):
+                for row in range(0, rows):
+                    if (column, row) in points:
+                        self.canvas[row][column] = 'x'
+        except (ValueError, KeyError, Exception):
+            return False
+
+        return True
 
     @staticmethod
     def __calculate_line_points(x1, y1, x2, y2):
@@ -140,6 +177,38 @@ class Canvas():
                 # Sum 1 column because the canvas start in 3 (0, 1, 2) column
                 points.append((i+1, y1))
         return points
+
+    @staticmethod
+    def __calculate_rectangle_points(x1, y1, x2, y2):
+        """
+        Calculate all point on which the rectangle will be drawn
+        :param x1: First coordinate in x axis
+        :param y1: First coordinate in y axis
+        :param x2: Second coordinate in x axis
+        :param y2: Second coordinate in y axis
+        :return: A list of coordinate pairs
+        """
+        points = set()
+
+        points.add((x1+1, y1))
+        points.add((x2+1, y2))
+
+        x = x1 + 1
+        y = y1
+
+        # Get horizontal lines
+        for i in range(0, (x2+1)-(x1+1)):
+            x += 1
+            points.add((x, y1))
+            points.add((x, y2))
+
+        # Get vertical lines
+        for i in range(0, y2-y1):
+            y += 1
+            points.add((x1+1, y))
+            points.add((x2+1, y))
+
+        return list(points)
 
 
 class Illustrator():
@@ -184,10 +253,20 @@ class Illustrator():
                     print 'Incorrect points or there is not canvas'
 
             elif c[0].upper() == 'R':
-                pass
+                if self.__validate_number_options(c, 5):
+                    raise(Exception('Incorrect format'))
 
+                # Get points
+                x1, y1, x2, y2 = int(c[1]), int(c[2]), int(c[3]), int(c[4])
+                if not self.__validate_format((x1, y1, x2, y2)):
+                    raise(Exception('Incorrect format'))
+
+                if not self.canvas:
+                    raise(Exception('First create a canvas'))
+                if not self.canvas.draw_rectangle(x1, y1, x2, y2):
+                    print 'Incorrect points or there is not canvas'
             elif c[0].upper() == 'B':
-                pass
+                raise(NotImplementedError('No implemented yet'))
             else:
                 raise(ValueError('Incorrect format'))
 

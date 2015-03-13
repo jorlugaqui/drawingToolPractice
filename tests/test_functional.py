@@ -63,7 +63,7 @@ class TestApp(unittest2.TestCase):
              '-', '-', '-', '-', '-', '-', '-', '-', '-'],
         ]
         get_canvas = mock.MagicMock(return_value=base_canvas)
-        printed = get_canvas('C 20 4')
+        printed = get_canvas('C 18 4')
         self.assertListEqual(printed, base_canvas)
 
     def test_draw_line(self):
@@ -89,6 +89,31 @@ class TestApp(unittest2.TestCase):
 
         get_canvas = mock.MagicMock(return_value=base_canvas)
         printed = get_canvas('L 1 2 6 2')
+        self.assertListEqual(printed, base_canvas)
+
+    def test_draw_rectangle(self):
+        base_canvas = [
+            ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+             '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', 'x', 'x', 'x', '|', ' '],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', 'x', ' ', 'x', '|', ' '],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', 'x', 'x', 'x', '|', ' '],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' '],
+
+            ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+             '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+        ]
+
+        get_canvas = mock.MagicMock(return_value=base_canvas)
+        printed = get_canvas('R 16 1 18 3')
         self.assertListEqual(printed, base_canvas)
 
 
