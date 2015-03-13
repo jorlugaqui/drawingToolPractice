@@ -100,6 +100,26 @@ class TestCanvasModel(unittest2.TestCase):
         r = self.can.draw_rectangle(25, 1, 30, 3)
         self.assertFalse(r)
 
+    def test_bucket_fill(self):
+        base_canvas = [
+            ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+            [' ', '|', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'x', 'x', 'x', 'x', 'x', '|', ' '],
+            [' ', '|', 'x', 'x', 'x', 'x', 'x', 'x', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'x', ' ', ' ', ' ', 'x', '|', ' '],
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', 'x', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'x', 'x', 'x', 'x', 'x', '|', ' '],
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', 'x', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', '|', ' '],
+            ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
+        ]
+        r = self.can.draw_line(1, 2, 6, 2)
+        self.assertTrue(r)
+        r = self.can.draw_line(6, 3, 6, 4)
+        self.assertTrue(r)
+        r = self.can.draw_rectangle(16, 1, 20, 3)
+        self.assertTrue(r)
+        r = self.can.fill_area(10+1, 3, 'o')
+        self.assertTrue(r)
+        printed = self.can.get_canvas()
+        self.assertEqual(sorted(base_canvas), sorted(printed))
+
 
 if __name__ == '__main__':
     unittest2.main()

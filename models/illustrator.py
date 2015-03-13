@@ -100,6 +100,17 @@ class Canvas():
 
         return True
 
+    def __point_in_boundaries(self, x, y):
+        boundaries = self.__get_canvas_boundaries()
+
+        if x <= boundaries[0][0] or x >= boundaries[1][0]:
+            return False
+
+        if y <= boundaries[0][1] or y >= boundaries[2][1]:
+            return False
+
+        return True
+
     def __get_canvas_boundaries(self):
         """
         Calculate the boundaries of the canvas
@@ -210,6 +221,26 @@ class Canvas():
 
         return list(points)
 
+    def fill_area(self, x, y, char):
+
+        if not self.__point_in_boundaries(x, y) or \
+                self.__already_filled(x, y, char):
+            return False
+
+        self.canvas[y][x] = char
+
+        self.fill_area(x+1, y, char)
+        self.fill_area(x-1, y, char)
+        self.fill_area(x, y+1, char)
+        self.fill_area(x, y-1, char)
+        return True
+
+    def __already_filled(self, x, y, char):
+        return self.canvas[y][x] == 'x' \
+            or self.canvas[y][x] == '-' \
+            or self.canvas[y][x] == '|' \
+            or self.canvas[y][x] == char
+
 
 class Illustrator():
     """Drawing operations."""
@@ -265,8 +296,24 @@ class Illustrator():
                     raise(Exception('First create a canvas'))
                 if not self.canvas.draw_rectangle(x1, y1, x2, y2):
                     print 'Incorrect points or there is not canvas'
+
             elif c[0].upper() == 'B':
-                raise(NotImplementedError('No implemented yet'))
+                if self.__validate_number_options(c, 4):
+                    raise(Exception('Incorrect format'))
+
+                # Get point and fill character
+                x, y = int(c[1]), int(c[2])
+                char = c[3]
+                if not self.__validate_format((x, y)):
+                    raise(Exception('Incorrect format'))
+
+                if not self.canvas:
+                    raise(Exception('First create a canvas'))
+
+                x += 1
+                if not self.canvas.fill_area(x, y, char):
+                    print 'Incorrect point or there is not canvas'
+
             else:
                 raise(ValueError('Incorrect format'))
 
