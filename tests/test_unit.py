@@ -21,7 +21,7 @@ class TestCanvasModel(unittest2.TestCase):
         self.assertEqual(self.can.w, 20)
         self.assertEqual(self.can.h, 4)
 
-    def test_get_canvas(self):
+    def test_create_canvas(self):
         base_canvas = [
             ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
              '-', '-', '-', '-', '-', '-', '-', '-', '-'],
@@ -44,6 +44,75 @@ class TestCanvasModel(unittest2.TestCase):
         printed = self.can.get_canvas()
         self.assertEqual(len(base_canvas[0]), len(printed[0]))
         self.assertEqual(sorted(base_canvas), sorted(printed))
+
+    def test_draw_line(self):
+        # Horizontal line
+        base_canvas = [
+            ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+             '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' '],
+
+            [' ', '|', 'x', 'x', 'x', 'x', 'x', 'x', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' '],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' '],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' '],
+
+            ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+             '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+        ]
+        r = self.can.draw_line(1, 2, 6, 2)
+        printed = self.can.get_canvas()
+        self.assertTrue(r)
+        self.assertEqual(len(base_canvas[0]), len(printed[0]))
+        self.assertEqual(sorted(base_canvas), sorted(printed))
+
+        # Vertical line
+        base_canvas = [
+            ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+             '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' '],
+
+            [' ', '|', 'x', 'x', 'x', 'x', 'x', 'x', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' '],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' '],
+
+            [' ', '|', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' '],
+
+            ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+             '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+        ]
+        r = self.can.draw_line(6, 3, 6, 4)
+        printed = self.can.get_canvas()
+        self.assertTrue(r)
+        self.assertEqual(len(base_canvas[0]), len(printed[0]))
+        self.assertEqual(sorted(base_canvas), sorted(printed))
+
+    def test_neither_vertical_nor_horizontal_line(self):
+        # Neither horizontal nor vertical
+        r = self.can.draw_line(1, 3, 3, 4)
+        self.assertFalse(r)
+
+    def test_there_is_not_canvas(self):
+        self.can.canvas = []
+        r = self.can.draw_line(6, 3, 6, 4)
+        printed = self.can.get_canvas()
+        self.assertFalse(r)
+        self.assertListEqual(printed, [])
+
+    def test_draw_out_canvas(self):
+        r = self.can.draw_line(1, 2, 25, 2)
+        self.assertFalse(r)
 
 
 if __name__ == '__main__':

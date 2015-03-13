@@ -34,17 +34,9 @@ def main():
     option = -1
     while not option == 'Q':
         option = get_option()
-        if option == 'C':
+        if option.upper() in ('C', 'L', 'R', 'B'):
             command = get_option(option='command')
             print get_canvas(illustrator, command)
-        elif option == 'L':
-            pass
-        elif option == 'R':
-            pass
-        elif option == 'B':
-            pass
-        else:
-            pass
 
 if __name__ == '__main__':
     main()
